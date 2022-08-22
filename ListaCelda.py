@@ -1,10 +1,29 @@
 from NodoCelda import Celda
 
 class ListaC:
-    def __init__(self):
-        self.primero=None
-        self.ultimo=None
+    def __init__(self)-> None:
+        self.primero=Celda()
+        self.ultimo=Celda()
         self.size=0
+    
+    def append(self, nuevasceldas):
+        if self.primero.fila is None:
+            self.primero=nuevasceldas
+            self.ultimo=nuevasceldas
+        elif self.primero.siguiente is None:
+            self.primero.siguiente=nuevasceldas
+            nuevasceldas.anterior=self.primero
+            self.ultimo=nuevasceldas
+
+        
+        else:
+            self.ultimo.siguiente=nuevasceldas
+            nuevasceldas.anterior=self.ultimo
+            self.ultimo=nuevasceldas
+
+  
+
+
 
     def insertar(self,fila,columna,tipo):
         nuevo=Celda(fila,columna,tipo)
@@ -24,20 +43,29 @@ class ListaC:
         while actual is not None:
             
             print('fila: ' + str(actual.fila) + ' columna: ' + str(actual.columna) + ' tipo: ' + str(actual.tipo))
-            print()
-            
             actual = actual.siguiente
         print()
         print()
 
     def buscar(self, fil, column):
         actual=self.primero
-        i=1
+        comprobante=False
         while actual is not None:
             if fil==actual.fila and column==actual.columna:
-                 print('fila: ' + str(actual.fila) + ' columna: ' + str(actual.columna) + ' tipo: ' + str(actual.tipo))
-            
+                # print('fila: ' + str(actual.fila) + ' columna: ' + str(actual.columna) + ' tipo: ' + str(actual.tipo))
+                comprobante=True
+            else:
+                pass   
             actual=actual.siguiente
+
+        if  comprobante==False:
+            new=Celda(fil,column,0)
+            self.append(new)
+                #print('fila: ' + str(actual.fila) + ' columna: ' + str(actual.columna) + ' tipo: ' + str(actual.tipo))
+        else:
+            pass
+
+            
 
 
     def pop(self, fil, column):
