@@ -1,6 +1,9 @@
 import xml.etree.ElementTree as ET
 from NodoCelda import Celda
 from ListaCelda import ListaC
+from NodoPaciente import pacienten
+from ListarPasiente import passiente
+
 
 
 def cargarXML(root):
@@ -30,6 +33,7 @@ def menu():
     if n=="2":
         tipe1=1
         listac=ListaC()
+        pacientep=passiente()
         tree=ET.parse("./prueba.xml")
         root=tree.getroot()
         for paciente in root:
@@ -37,56 +41,52 @@ def menu():
                 if datospersonales.tag.lower()=="datospersonales":
                     for dato in datospersonales:
                         if dato.tag.lower() =="nombre":
+                            namep=str(dato.text)
                             print("nombre: ",dato.text)
                         if dato.tag.lower() =="edad":
+                            edadp=str(dato.text)
                             print("edad: ",dato.text)
 
                 if datospersonales.tag.lower() =="periodos":
+                    periodosp=str(datospersonales.text)
                     print("periodos: ",datospersonales.text)
                 if datospersonales.tag.lower() =="m":
                     print("m: ",datospersonales.text)
-                    i=0
-                    j=0
                     m=int(datospersonales.text)+1
-#                    for x in range(i, m):
- #                       #j=0
-  #                      for y in  range(j, m):
-   #                         listac.insertar(str(x),str(y),0)
-    #                        #j=j+1
-     #                  # i=i+i                 
-            
+                    mp=str(datospersonales.text)
+                    neww=pacienten(namep,edadp,periodosp,mp)
+                    pacientep.append(neww)
+                    npaciente=pacientep.buscarpaciente(namep)
 
-
-                    #and j<= int(datospersonales.text):
-
-
-
-
-                    
                 if datospersonales.tag.lower() =="rejilla":
                     for rejilla in datospersonales:
                         fila=rejilla.attrib["f"]
                         column=rejilla.attrib["c"]
-                        pass
+                        nuevasceldas=Celda(fila,column,1)
+                        npaciente.celdas.append(nuevasceldas)
+                    i=0
+                    for x in range(i, m):
+                        j=0
+                        for y in  range(j, m):
+                            npaciente.celdas.buscar(str(x),str(y))
+
+
+
+
+                      #  pass
                         
-                        #print("fila: ",rejilla.attrib["f"])
-                        #print("columna: ",rejilla.attrib["c"])
+             #           print("fila: ",rejilla.attrib["f"])
+              #          print("columna: ",rejilla.attrib["c"])
                        
                        # listac.pop(fila,column)
 
-                        listac.insertar(fila,column,1)
+                      #----  listac.insertar(fila,column,1)
+    
 
-
-
-
-
-        listac.pop("1","1")
-        listac.mostrarCeldas()
-     #   listac.buscar("1","1")
-      #  listac.pop("1","1")
-        #listac.mostrarCeldas()
-        
-
+    pacientep.print()
+    
+    #npaciente.celdas.buscar("3","0")
+    npaciente.celdas.mostrarCeldas()
 
 
        
