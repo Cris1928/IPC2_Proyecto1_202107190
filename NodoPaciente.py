@@ -7,5 +7,3 @@ class pacienten:
         self.m=m
         self.celdas=ListaC()
         self.siguiente=None
-
-

@@ -3,17 +3,21 @@ class passiente:
         def __init__(self)-> None:
                 self.primero=pacienten()
                 self.ultimo=pacienten()
+                self.size=0
 
         def append(self,nuevopaciente):
                 if self.primero.nombre is None:
                         self.primero=nuevopaciente
                         self.ultimo=nuevopaciente
+                        self.size += 1
                 elif self.primero.siguiente is None:
                         self.primero.siguiente=nuevopaciente
                         self.ultimo=nuevopaciente
+                        self.size += 1
                 else:
                         self.ultimo.siguiente=nuevopaciente
                         self.ultimo=nuevopaciente
+                        self.size += 1
         def print(self):
                 nodoaux=self.primero
                 cadena= ""
@@ -61,7 +65,15 @@ class passiente:
 
 
 
-        def vacia(self):
-                return self.primero==None
-        
-  
+        def limpiarList(self):
+                i = 1
+                
+                while i < (self.size + 1):
+                
+                        actual = self.primero.siguiente
+                        self.primero = None
+                        self.primero = actual
+                        
+                        i += 1
+                
+                self.size = 0 

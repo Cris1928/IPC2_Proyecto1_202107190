@@ -5,4 +5,3 @@ class Celda:
         self.tipo=tipo
         self.siguiente=None
         self.anterior=None
-        
