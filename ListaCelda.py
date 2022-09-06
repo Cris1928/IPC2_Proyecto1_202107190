@@ -2,11 +2,14 @@ from NodoCelda import Celda
 import math
 import webbrowser
 from os import system,startfile
-
+from ListaComparacion import Comparacion
+from NodoNumeral import numeralnodo
+from ListaNumeral import ListadoNumeral
 from fpdf import FPDF
 
 class ListaC:
-  
+#    global nuevonumero
+ #   nuevonumero=ListadoNumeral()
     def __init__(self)-> None:
         self.primero=Celda()
         self.ultimo=Celda()
@@ -16,24 +19,38 @@ class ListaC:
         if self.primero.fila is None:
             self.primero=nuevasceldas
             self.ultimo=nuevasceldas
+            self.size += 1
         elif self.primero.siguiente is None:
             self.primero.siguiente=nuevasceldas
             nuevasceldas.anterior=self.primero
             self.ultimo=nuevasceldas
+            self.size += 1
 
         
         else:
             self.ultimo.siguiente=nuevasceldas
             nuevasceldas.anterior=self.ultimo
             self.ultimo=nuevasceldas
+            self.size += 1
 
 
     def evaluar(self,n):
+        global nuevonumero
+        nuevonumero=ListadoNumeral()
+        
         contador=0
         numeral=1
         while contador<=n:
-     
+            
+            nuevonumeral=numeralnodo(contador)
+            nuevonumero.append(nuevonumeral)
+            busqueda=nuevonumero.buscarnumero(contador)
             actual=self.primero
+            while actual is not None:
+
+                nuevasceldas=Comparacion(actual.fila,actual.columna, actual.tipo)
+                busqueda.celdas.appendComparar(nuevasceldas)
+                actual=actual.siguiente
             self.graficar(contador)
 
             actual=self.primero
@@ -231,6 +248,60 @@ class ListaC:
             contador=contador+1
 
 
+    def enfermedad(self,numero):
+        niveldeenfermedad=0
+        actual = self.primero
+        m=0
+        enfermedadleve=0
+        contador=0  
+        while actual is not None:
+            m=m+1
+            enfermedadleve=enfermedadleve+1
+            actual=actual.siguiente
+        while contador<=numero:
+            periodorepetido=0
+            contador2=contador+1
+            while contador2 <=numero:
+                n=0
+                comprobante_de_enfermedad_leve=0
+                busqueda=nuevonumero.buscarnumero(contador)
+                actual2 = busqueda.celdas.primero
+                while actual2 is not None:
+                    if actual2.tipo==0:
+                        comprobante_de_enfermedad_leve=comprobante_de_enfermedad_leve+1
+                    actual2=actual2.siguiente
+                if comprobante_de_enfermedad_leve==enfermedadleve:
+                    return 0
+                else:
+                    pass
+                actual2 = busqueda.celdas.primero
+                busqueda2=nuevonumero.buscarnumero(contador2)
+                while actual2 is not None:
+                 #   print('fila: ' + str(actual2.fila) + ' columna: ' + str(actual2.columna) + ' tipo: ' + str(actual2.tipo))
+                    prueba=busqueda2.celdas.retornarcelda(actual2.fila,actual2.columna, actual2.tipo)
+                    if prueba== True:
+                        n=n+1
+                    else:
+                        pass
+                    actual2=actual2.siguiente
+                if n != m:
+                    periodorepetido=periodorepetido+1   
+                elif n== m:
+                    aux=contador
+                    periodorepetido=periodorepetido+1
+                    print("El patron {}".format(contador)+" se repite en los periodos: \n")
+                    while aux <=numero:
+                        print("periodo {}".format(aux))
+                        aux=aux+periodorepetido
+                    return periodorepetido
+                else: 
+                    pass   
+               # print(" ")
+                contador2=contador2+1
+            contador=contador+1
+        nuevonumero.limpiarList()
+        return periodorepetido
+        
             
 
 
@@ -454,4 +525,11 @@ class ListaC:
         
 
 
-    
+        
+        
+        
+
+        
+                
+
+
