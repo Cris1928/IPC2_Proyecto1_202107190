@@ -41,15 +41,12 @@ class ListaComparar:
         return False
 
 
-
-
-
     def limpiarListaComparar(self):
             i = 1
             actual = self.primero
             while actual is not None:
                 self.primero = None
-                actual=actual.siguiente
+                actual=actual
                 
                 i += 1
   

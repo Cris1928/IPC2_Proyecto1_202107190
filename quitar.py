@@ -147,7 +147,63 @@ try:
 
 
 
+------------------------------------------------------------------------------------------------------
+    def enfermedad(self,numero):
+        niveldeenfermedad=0
+        actual = self.primero
+        m=0
+        contador=0  
+        while actual is not None:
+            m=m+1
+            actual=actual.siguiente
 
+     #   while contador <=numero:
+      #      busqueda1=nuevonumero.buscarnumero(contador)
+       #     actual=busqueda1.celdas.primero
+        while contador<=numero:
+            periodorepetido=0
+            contador2=contador+1
+            while contador2 <=numero:
+                n=0
+                busqueda=nuevonumero.buscarnumero(contador)
+                actual2 = busqueda.celdas.primero
+                busqueda2=nuevonumero.buscarnumero(contador2)
+                while actual2 is not None:
+                 #   print('fila: ' + str(actual2.fila) + ' columna: ' + str(actual2.columna) + ' tipo: ' + str(actual2.tipo))
+                    prueba=busqueda2.celdas.retornarcelda(actual2.fila,actual2.columna, actual2.tipo)
+                    if prueba== True:
+                        n=n+1
+                    else:
+                        pass
+                    actual2=actual2.siguiente
+                if n != m:
+                    periodorepetido=periodorepetido+1   
+                elif n== m:
+                    aux=contador
+                    periodorepetido=periodorepetido+1
+                    print("El patron {}".format(contador)+" se repite en los periodos: ")
+                    while aux <=numero:
+                        print("periodo {}".format(aux),"\n")
+                        aux=aux+periodorepetido
+                    return periodorepetido
+                else: 
+                    pass   
+               # print(" ")
+                contador2=contador2+1
+            contador=contador+1
+        nuevonumero.limpiarList()
+        return periodorepetido
+-----------------------------------------------------------------------------------------------------
+    def retornarcelda(self,fila,columna,tipo):
+
+        actual=self.primero
+        while actual is not None:
+            if fila == actual.fila and columna==actual.columna and tipo==actual.tipo:
+                return True
+            else: 
+                pass
+            actual=actual.siguiente
+        return False
 
 
 

@@ -1,10 +1,15 @@
+import webbrowser
 import xml.etree.ElementTree as ET
 from NodoCelda import Celda
 from ListaCelda import ListaC
 from NodoPaciente import pacienten
 from ListarPasiente import passiente
+from ListaNumeral import ListadoNumeral
+from fpdf import FPDF
+import os
 
-
+#C:\Users\USER\Desktop\Prueba1.xml
+#C:\Users\USER\Desktop\IPC2_Proyecto1_202107190\prueba.xml
 
 def cargarXML(root):
 
@@ -12,37 +17,40 @@ def cargarXML(root):
         for datos in elemento.findall('.//paciente/datospersonales'):
             nombre=datos.text
             print(nombre)
-
-parar=False
+def XML(root):
+    pass
 
 def menu():
+    global nuevonumero
+    nuevonumero=ListadoNumeral()
     while True:
-
-        print('|****************** Menú ****************** |')
-        print()
+        print('|************************* Menú ************************* |')
+        print(" ")
         print(" → 1. Cargar archivo XML.")
         print(" → 2. Diagnosticar paciente")
-
-        print(' → 3. Salir.')
+        print(" → 3. Generar reporte de diagnostico de los pacientes")
+        print(' → 4. Salir.')
+        print(" ")
+        print('|******************************************************* |')
             
         print()
         n = input('Digite la opción a realizar: ')
         print()
         if n == "1":
+#C:\Users\USER\Desktop\Prueba1.xml
+#C:\Users\USER\Desktop\IPC2_Proyecto1_202107190\prueba.xml
+            pacientep=passiente()
+            pacientep.limpiarList()
         #  tree=ET.parse("./prueba.xml")
         # root=tree.getroot()
-
-
-
-
-
-
     # if n=="2":
-            tipe1=1
-            listac=ListaC()
-            pacientep=passiente()
-            tree=ET.parse("./prueba.xml")
+            ruta = input('ingrese la dirección de su archivo XML: ')
+        elif n=="2":
+            nuevonumero=ListadoNumeral()
+            tree=ET.parse(ruta)
             root=tree.getroot()
+            pacientep.limpiarList()
+            pacientep=passiente()
             for paciente in root:
                 for datospersonales in paciente:
                     if datospersonales.tag.lower()=="datospersonales":
@@ -77,6 +85,7 @@ def menu():
                             j=1
                             for y in  range(j, m):
                                 npaciente.celdas.buscar(int(x),int(y))
+            
                         #  pass
                             
                 #           print("fila: ",rejilla.attrib["f"])
@@ -84,9 +93,8 @@ def menu():
                         
                         # listac.pop(fila,column)
 
-                        #----  listac.insertar(fila,column,1)
-        if n=="2":
-        
+                        #----  listac.insertar(fila,column,1)  
+        #------------------------------------------------------------------------------------------------------------------
 
             pacientep.print()
             numeropaciente=input("ingrese el paciente que desea examinar: ")
@@ -96,22 +104,44 @@ def menu():
 
            # npaciente=pacientep.buscarpaciente("Criscros")
             #npaciente.celdas.mostrarCeldas()
-
+            nuevonumero.limpiarList()
 
             busqueda1=pacientep.returnNombrePaciente(int(numeropaciente))
             npaciente=pacientep.buscarpaciente(str(busqueda1))
-            npaciente.celdas.mostrarCeldas()
-           # npaciente.celdas.evaluar()
-            print("")
-            print("")
-            npaciente.celdas.mostrarCeldas()
-
-
-
-
-        if n=="3":
+            periodos=int(npaciente.periodo)
+            npaciente.celdas.evaluar(periodos)
+            print(" ")
+            print(" ")
+            diagnostico=npaciente.celdas.enfermedad(periodos)
+            if diagnostico == 0:
+                print("\n Diagnostico: La enfermedad es leve")
+            elif diagnostico == 1:
+                print("\n Diagnostico: La enfermedad es mortal")
+            elif diagnostico > 1:
+                print("\n Diagnostico: La enfermedad es grave")
+            else:
+                pass
+            print(" ")
+            print(" ")
+            generarPDF(periodos,busqueda1)
+           # print("")
+          #  print("-----------------------------"
+         #   npaciente.celdas.mostrarCeldas()
+            #npaciente.celdas.generarpdf()
+            #npaciente.celdas.graficar()
+            nuevonumero.limpiarList()
+        elif n=="3":
             return False
+        else:
+            pass
+def generarPDF(periodos,nombre):
+    pdf=FPDF(orientation="P",unit="mm",format="A4")
+    for i in range(0,(periodos+1)):
+        pdf.add_page()
+        pdf.image("graphviz{}".format(i)+".png",x=50,y=50,w=120,h=120)
+    pdf.output("{}".format(nombre)+".pdf")
+    for i in range(0,(periodos+1)):
+        os.remove("graphviz{}".format(i)+".png")
+        os.remove("graphviz{}".format(i)+".dot")    
 
-
-    
 menu()

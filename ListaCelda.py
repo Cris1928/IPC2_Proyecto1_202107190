@@ -5,10 +5,11 @@ from os import system,startfile
 from ListaComparacion import Comparacion
 from NodoNumeral import numeralnodo
 from ListaNumeral import ListadoNumeral
+from fpdf import FPDF
 
 class ListaC:
-    global nuevonumero
-    nuevonumero=ListadoNumeral()
+#    global nuevonumero
+ #   nuevonumero=ListadoNumeral()
     def __init__(self)-> None:
         self.primero=Celda()
         self.ultimo=Celda()
@@ -18,23 +19,40 @@ class ListaC:
         if self.primero.fila is None:
             self.primero=nuevasceldas
             self.ultimo=nuevasceldas
+            self.size += 1
         elif self.primero.siguiente is None:
             self.primero.siguiente=nuevasceldas
             nuevasceldas.anterior=self.primero
             self.ultimo=nuevasceldas
+            self.size += 1
 
         
         else:
             self.ultimo.siguiente=nuevasceldas
             nuevasceldas.anterior=self.ultimo
             self.ultimo=nuevasceldas
+            self.size += 1
 
 
     def evaluar(self,n):
+        global nuevonumero
+        nuevonumero=ListadoNumeral()
         
-        contador=1
+        contador=0
         numeral=1
         while contador<=n:
+            
+            nuevonumeral=numeralnodo(contador)
+            nuevonumero.append(nuevonumeral)
+            busqueda=nuevonumero.buscarnumero(contador)
+            actual=self.primero
+            while actual is not None:
+
+                nuevasceldas=Comparacion(actual.fila,actual.columna, actual.tipo)
+                busqueda.celdas.appendComparar(nuevasceldas)
+                actual=actual.siguiente
+            self.graficar(contador)
+
             actual=self.primero
             while actual is not None:
                 if actual.tipo==0:
@@ -205,9 +223,9 @@ class ListaC:
                 actual=actual.siguiente
 
             actual=self.primero       
-            nuevonumeral=numeralnodo(contador)
-            nuevonumero.append(nuevonumeral)
-            busqueda=nuevonumero.buscarnumero(contador)
+#            nuevonumeral=numeralnodo(contador)
+ #           nuevonumero.append(nuevonumeral)
+  #          busqueda=nuevonumero.buscarnumero(contador)
             
             while actual is not None:
                 if actual.tipo==2:
@@ -216,49 +234,73 @@ class ListaC:
                     actual.tipo=1
                 else:
                     pass
-                nuevasceldas=Comparacion(actual.fila,actual.columna, actual.tipo)
-                busqueda.celdas.appendComparar(nuevasceldas)
+   #             nuevasceldas=Comparacion(actual.fila,actual.columna, actual.tipo)
+    #            busqueda.celdas.appendComparar(nuevasceldas)
                 actual=actual.siguiente
-            self.graficar(contador)
-            busqueda.celdas.mostrarCeldas()
+      #      self.graficar(contador)
+
+
+
+            #----------
+          #  busqueda.celdas.mostrarCeldas()
 
 
             contador=contador+1
-
-
-        
-
-
-
 
 
     def enfermedad(self,numero):
         niveldeenfermedad=0
         actual = self.primero
         m=0
-        contador=1
+        enfermedadleve=0
+        contador=0  
         while actual is not None:
             m=m+1
+            enfermedadleve=enfermedadleve+1
             actual=actual.siguiente
-
         while contador<=numero:
-            n=0
-            busqueda=nuevonumero.buscarnumero(contador)
-            actual = self.primero
-            while actual is not None:
-                prueba=busqueda.celdas.retornarcelda(actual.fila,actual.columna, actual.tipo)
-                if prueba== True:
-                    n=n+1
+            periodorepetido=0
+            contador2=contador+1
+            while contador2 <=numero:
+                n=0
+                comprobante_de_enfermedad_leve=0
+                busqueda=nuevonumero.buscarnumero(contador)
+                actual2 = busqueda.celdas.primero
+                while actual2 is not None:
+                    if actual2.tipo==0:
+                        comprobante_de_enfermedad_leve=comprobante_de_enfermedad_leve+1
+                    actual2=actual2.siguiente
+                if comprobante_de_enfermedad_leve==enfermedadleve:
+                    return 0
                 else:
                     pass
-                actual=actual.siguiente
-            if n == m:
-                niveldeenfermedad=niveldeenfermedad+1
-            else:
-                pass
+                actual2 = busqueda.celdas.primero
+                busqueda2=nuevonumero.buscarnumero(contador2)
+                while actual2 is not None:
+                 #   print('fila: ' + str(actual2.fila) + ' columna: ' + str(actual2.columna) + ' tipo: ' + str(actual2.tipo))
+                    prueba=busqueda2.celdas.retornarcelda(actual2.fila,actual2.columna, actual2.tipo)
+                    if prueba== True:
+                        n=n+1
+                    else:
+                        pass
+                    actual2=actual2.siguiente
+                if n != m:
+                    periodorepetido=periodorepetido+1   
+                elif n== m:
+                    aux=contador
+                    periodorepetido=periodorepetido+1
+                    print("El patron {}".format(contador)+" se repite en los periodos: \n")
+                    while aux <=numero:
+                        print("periodo {}".format(aux))
+                        aux=aux+periodorepetido
+                    return periodorepetido
+                else: 
+                    pass   
+               # print(" ")
+                contador2=contador2+1
             contador=contador+1
-
-        return niveldeenfermedad
+        nuevonumero.limpiarList()
+        return periodorepetido
         
             
 
@@ -358,7 +400,7 @@ class ListaC:
     def graficar(self,p):
         actual=self.primero
         i=1
-        graphviz = 'digraph Patron{ \n node[shape=box fillcolor="#FFEDBB" style=filled];  \n subgraph cluster_p{ \n label = "nombrelabel"   \n bgcolor="#398D9C" \n raiz[label="0,0"]\n edge[dir="none" style=invisible] \n '
+        graphviz = 'digraph Patron{ \n node[shape=box fillcolor="#FFEDBB" style=filled];  \n subgraph cluster_p{ \n label ='+ '"periodo-{}"'.format(p)+'\n bgcolor="#398D9C" \n raiz[label="0,0"]\n edge[dir="none" style=invisible] \n '
         while actual is not None:
             i=i+1
             actual=actual.siguiente
@@ -438,15 +480,6 @@ class ListaC:
        # ###########print(graphviz)
 
             
-    def generarpdf(self):
-        pass
-
-
-        
-
-
-
-
 
     def limpiarListaCelda(self):
         i = 1
@@ -498,4 +531,5 @@ class ListaC:
 
         
                 
+
 
