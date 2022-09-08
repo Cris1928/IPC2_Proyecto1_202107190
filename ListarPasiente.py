@@ -1,4 +1,5 @@
 from NodoPaciente import pacienten
+from colorama import Fore
 class passiente:
         def __init__(self)-> None:
                 self.primero=pacienten()
@@ -24,8 +25,7 @@ class passiente:
                 num=1
                 while True:
                         if nodoaux.nombre is not None:
-                                #cadena +="("+nodoaux.nombre+" "+nodoaux.edad+" "+nodoaux.periodo+" "+nodoaux.m +")"
-                                cadena +=str(num)+". ("+nodoaux.nombre+")"
+                                cadena +=Fore.LIGHTGREEN_EX+str(num)+". ("+nodoaux.nombre+")"
                                 if nodoaux.siguiente is not None:
                                         nodoaux=nodoaux.siguiente
                                         cadena+="\n"
@@ -77,3 +77,11 @@ class passiente:
                         i += 1
                 
                 self.size = 0 
+
+        def returnTamano(self):
+                tamano=0
+                actual=self.primero
+                while actual is not None:
+                        tamano=tamano+1
+                        actual=actual.siguiente
+                return tamano
